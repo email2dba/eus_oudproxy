@@ -1,0 +1,145 @@
+# Please uncomment the following one line if you are importing this 
+# LDIF file via OVD Manager or OVD Server's ldapmodify tool.
+
+#version: 1
+
+dn: cn=OracleContext,dc=example,dc=com
+cn: OracleContext
+objectclass: top
+objectclass: orclContext
+objectclass: orclContextAux82
+orclVersion: 90600
+aci: (targetattr="*")(version 3.0; acl "OracleContext accessible by OracleContextAdmins"; allow (all) groupdn="ldap:///cn=OracleContextAdmins,cn=groups,cn=OracleContext,dc=example,dc=com";)
+aci: (targetattr="*")(version 3.0; acl "OracleContext accessible by OracleNetAdmins"; allow (all) groupdn="ldap:///cn=OracleNetAdmins,cn=OracleContext,dc=example,dc=com";)
+aci: (targetattr!="userpassword||authpassword||aci")(version 3.0; acl "Anonymous read access to OracleContext"; allow (read,search,compare) userdn="ldap:///anyone";)
+
+dn: cn=Products,cn=OracleContext,dc=example,dc=com
+cn: Products
+objectclass: top
+objectclass: orclContainer
+
+dn: cn=OracleDBSecurityAdmins,cn=OracleContext,dc=example,dc=com
+cn: OracleDBSecurityAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+
+dn: cn=OracleDBCreators,cn=OracleContext,dc=example,dc=com
+cn: OracleDBCreators
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+
+dn: cn=OracleNetAdmins,cn=OracleContext,dc=example,dc=com
+cn: OracleNetAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+
+dn: cn=OracleDBSecurity,cn=Products,cn=OracleContext,dc=example,dc=com
+cn: OracleDBSecurity
+objectclass: top
+objectclass: orclContainer
+objectclass: orclDBSecConfig
+objectclass: orclDBSecConfig10i
+orclDBOIDAuthentication: PASSWORD
+orclversion: 102000
+orclDBVersionCompatibility: 90000
+
+dn: cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext,dc=example,dc=com
+cn: OracleDefaultDomain
+objectclass: top
+objectclass: orclDBEnterpriseDomain
+objectclass: groupofuniquenames
+objectclass: orclDBEnterpriseDomain_82
+orcldbauthtypes: ALL
+aci: (targetattr="*")(version 3.0; acl "OracleDefaultDomain accessible by OracleDomainAdmins"; allow (all) groupdn="ldap:///cn=OracleDomainAdmins,cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext,dc=example,dc=com";)
+
+dn: cn=Groups,cn=OracleContext,dc=example,dc=com
+cn: Groups
+objectclass: top
+objectclass: orclContainer
+
+dn: cn=Common,cn=Products,cn=OracleContext,dc=example,dc=com
+cn: Common
+orclCommonNickNameAttribute: uid
+orclCommonApplicationGuidAttribute: orclGlobalID
+orclCommonUserSearchBase: dc=example,dc=com
+orclCommonGroupSearchBase: dc=example,dc=com
+orclVersion: 90000
+objectclass: top
+objectclass: orclCommonAttributes
+objectClass: orclCommonAttributesV2
+orclUserObjectClasses: top
+orclUserObjectClasses: person
+orclUserObjectClasses: inetorgperson
+orclUserObjectClasses: organizationalperson
+orclUserObjectClasses: orcluser
+orclUserObjectClasses: orcluserv2
+orclcommonnamingattribute: uid
+orclCommonGroupCreateBase: cn=Groups,dc=example,dc=com
+orclCommonUserCreateBase: dc=example,dc=com
+orclCommonDefaultUserCreateBase: ou=People,dc=example,dc=com
+orclCommonDefaultGroupCreateBase: cn=Groups,dc=example,dc=com
+orclCommonKrbPrincipalAttribute: krbPrincipalName
+orclCommonWindowsPrincipalAttribute: orclSAMAccountName
+orclSubscriberSearchBase: dc=example,dc=com
+orclSubscriberNickNameAttribute: dc 
+
+dn: cn=OracleContextAdmins,cn=Groups,cn=OracleContext,dc=example,dc=com
+cn: OracleContextAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: Oracle Context Administrators
+description: Users who can administer all entities in this Oracle Context
+
+dn: cn=OracleUserSecurityAdmins,cn=Groups,cn=OracleContext,dc=example,dc=com
+cn: OracleUserSecurityAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+
+dn: cn=OraclePasswordAccessibleDomains,cn=Groups,cn=OracleContext,dc=example,dc=com
+cn: OraclePasswordAccessibleDomains
+uniquemember: cn=OracleDBSecurityAdmins,cn=OracleContext,dc=example,dc=com
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+
+dn: cn=OracleDomainAdmins,cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext,dc=example,dc=com
+cn: OracleDomainAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+
+dn: cn=LabelSecurity,cn=Products,cn=OracleContext,dc=example,dc=com
+objectclass: orclContainer
+objectclass: top
+cn: LabelSecurity
+orclVersion: 100000
+
+dn: cn=Policies,cn=LabelSecurity,cn=Products,cn=OracleContext,dc=example,dc=com
+objectclass: orclContainer
+objectclass: top
+cn: Policies
+aci: (targetattr="*")(version 3.0; acl "Policies accessible by PolicyCreators"; allow (all) groupdn="ldap:///cn=PolicyCreators,cn=Policies,cn=LabelSecurity,cn=Products,cn=OracleContext,dc=example,dc=com";)
+
+dn: cn=PolicyCreators,cn=Policies,cn=LabelSecurity,cn=Products,cn=oraclecontext,dc=example,dc=com
+objectclass: top
+objectclass: orclACPgroup
+objectclass: groupOfUniqueNames
+cn: PolicyCreators
+owner: cn=OracleContextAdmins,cn=Groups,cn=OracleContext,dc=example,dc=com
+
+dn: cn=ProxyPermissions,cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext,dc=example,dc=com
+cn: ProxyPermissions
+objectclass: orclContainer
+objectclass: top

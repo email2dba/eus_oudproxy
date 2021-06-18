@@ -1,0 +1,417 @@
+dn: cn=OracleSchemaVersion
+objectclass: top
+objectclass: orclContainer
+cn: OracleSchemaVersion
+aci: (targetattr!="userpassword||authpassword||aci")(version 3.0; acl "Anonymous read access to OracleSchemaVersion"; allow (read,search,compare) userdn="ldap:///anyone";)
+
+dn: cn=BASE,cn=OracleSchemaVersion
+orclproductversion: 90600
+objectclass: top
+objectclass: orclSchemaVersion
+cn: BASE
+
+dn: cn=RDBMS,cn=OracleSchemaVersion
+orclproductversion: 102000
+objectclass: top
+objectclass: orclSchemaVersion
+cn: RDBMS
+
+#
+# Create Oracle Admin context object
+#
+dn: cn=OracleContext
+cn: OracleContext
+objectclass: top
+objectclass: orclContext
+objectclass: orclContextAux82
+objectclass: orclRootContext
+orclVersion: 90600
+aci: (targetattr!="userpassword||authpassword||aci")(version 3.0; acl "Anonymous read access to subtree"; allow (read,search,compare) userdn="ldap:///anyone";)
+
+#
+#
+# Create Products container object under the context
+#
+dn: cn=Products,cn=OracleContext
+cn: Products
+objectclass: top
+objectclass: orclContainer
+
+#
+#
+# Create the three admin groups under the context
+#
+dn: cn=OracleDBSecurityAdmins,cn=OracleContext
+cn: OracleDBSecurityAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+description: Users who can create and delete enterprise domains in this realm, move databases between enterprise domains, and configure cross-domain information, such as version compatibility and the default database-to-oid authentication mechanism.
+displayname: Oracle Database Registration Administrators
+description: Users who can register databases in this realm, including creating the database server entry and subtree, and adding the newly registered database to the Oracle Default Domain.
+owner: cn=OracleDBSecurityAdmins,cn=OracleContext
+
+dn: cn=OracleDBCreators,cn=OracleContext
+cn: OracleDBCreators
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+owner: cn=OracleContextAdmins,cn=OracleContext
+
+dn: cn=OracleNetAdmins,cn=OracleContext
+cn: OracleNetAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+owner: cn=OracleNetAdmins,cn=OracleContext
+displayname: Oracle Network Service Administrators
+description: Users who can register Network Service Alias in this Oracle Context.
+
+#
+#
+# Create DB Security container object to hold the domains 
+#
+dn: cn=OracleDBSecurity,cn=Products,cn=OracleContext
+cn: OracleDBSecurity
+objectclass: top
+objectclass: orclContainer
+objectclass: orclDBSecConfig
+objectclass: orclDBSecConfig10i
+orclDBOIDAuthentication: PASSWORD
+orclDBVersionCompatibility: 90000
+orclversion: 102000
+
+#
+#
+# Create default domain 
+#
+dn: cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext
+cn: OracleDefaultDomain
+objectclass: top
+objectclass: orclDBEnterpriseDomain
+objectclass: groupofuniquenames
+objectclass: orclDBEnterpriseDomain_82
+orcldbauthtypes: ALL
+
+#
+# Create Groups container object under the context
+#
+dn: cn=Groups,cn=OracleContext
+cn: Groups
+objectclass: top
+objectclass: orclContainer
+
+#
+# Create Services container object under the context
+#
+dn: cn=Services,cn=OracleContext
+cn: Groups
+objectclass: top
+objectclass: orclContainer
+
+
+#
+# Create Common container object under Products
+#
+dn: cn=Common,cn=Products,cn=OracleContext
+cn: Common
+orclCommonNickNameAttribute: uid
+orclCommonApplicationGuidAttribute: orclGlobalID
+orclVersion: 90000
+objectclass: top
+objectclass: orclCommonAttributes
+objectclass: orclCommonAttributesV2
+orcluserobjectclasses: top
+orcluserobjectclasses: person
+orcluserobjectclasses: inetorgperson
+orcluserobjectclasses: organizationalperson
+orcluserobjectclasses: orcluser
+orcluserobjectclasses: orcluserv2
+orclCommonPasswordPolicy: {x- orcldbpwd}:ALWAYS:orclPassword::
+orclCommonUserCreateBase: cn=Users,
+orclCommonDefaultUserCreateBase: cn=Users,
+orclcommonnamingattribute: cn
+orclCommonGroupCreateBase: cn=Groups,
+orclCommonDefaultGroupCreateBase: cn=Groups,
+orclCommonKrbPrincipalAttribute: krbPrincipalName
+orclCommonWindowsPrincipalAttribute: orclSAMAccountName
+
+
+#
+# Create new context admin group under Groups container
+#
+dn: cn=OracleContextAdmins,cn=Groups,cn=OracleContext
+cn: OracleContextAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: Oracle Context Administrators
+description: Users who can administer all entities in this Oracle Context
+
+#
+# Create new user security admin group under Groups container
+#
+dn: cn=OracleUserSecurityAdmins,cn=Groups,cn=OracleContext
+cn: OracleUserSecurityAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: User Security Administrators
+description: Users who can administer password related attributes of other users in the Identity Management Realm.
+owner: cn=OracleUserSecurityAdmins,cn=Groups,cn=OracleContext 
+
+#
+# Create new password-accessible domains group under Groups container
+#
+dn: cn=OraclePasswordAccessibleDomains,cn=Groups,cn=OracleContext
+cn: OraclePasswordAccessibleDomains
+uniquemember: cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: Oracle Password Accessible Domains
+description: Enterprise domains whose database members can read users' authentication information in OID in order to allow database login by those users.
+owner: cn=OracleDBSecurityAdmins,cn=OracleContext
+
+#
+# Create the DAS Priviledge Groups
+#
+dn: cn=OracleDASUserPriv, cn=Groups,cn=OracleContext
+objectclass: groupOfUniqueNames
+objectclass: top
+objectclass: orclprivilegegroup
+objectclass: orclGroup
+displayname: DAS User Privilege
+description: Allow members to grant user privilege
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+
+dn: cn=OracleDASConfiguration, cn=Groups,cn=OracleContext
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+objectclass: groupOfUniqueNames
+objectclass: top
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: DAS Configuration Privilege
+description: Grant members configuration privilege
+
+dn: cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext
+objectclass: groupOfUniqueNames
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+objectclass: top
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: DAS Create User Privilege
+description: Grant members user creation privilege 
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASGroupPriv Group by DAS Users and Groups Priv"; 
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASUserPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+
+dn: cn=OracleDASCreateUser, cn=Groups,cn=OracleContext
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclprivilegegroup
+objectclass: orclGroup
+displayname: DAS Create User Privilege
+description: Grant members user Creation privilege
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASCreateUser Group by DAS Users and Groups Priv";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASUserPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+
+dn: cn=OracleDASDeleteUser, cn=Groups,cn=OracleContext
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: orclprivilegegroup
+objectclass: orclGroup
+displayname: DAS Delete User Privilege
+description: Grant members user deletion privilege 
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASDeleteUser Group by DAS Users and Groups Priv"; 
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASUserPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+dn: cn=OracleDASEditUser, cn=Groups,cn=OracleContext
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+objectclass: groupOfUniqueNames
+objectclass: top
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: DAS Edit User Privilege
+description: Grant members user edit privilege 
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASEditUser Group by DAS Users and Groups Priv"; 
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASUserPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+dn: cn=OracleDASCreateGroup, cn=Groups,cn=OracleContext
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+objectclass: groupOfUniqueNames
+objectclass: top
+objectclass: orclPrivilegeGroup
+objectclass: orclGroup
+displayname: DAS Create Group Privilege
+description: Grant members group creation privilege
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASCreateGroup"; 
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASUserPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+dn: cn=OracleDASDeleteGroup, cn=Groups,cn=OracleContext
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+objectclass: groupOfUniqueNames
+objectclass: top
+objectclass: orclprivilegegroup
+objectclass: orclGroup
+displayname: DAS Delete Group Privilege
+description: Grant members group deletion privilege
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASDeleteGroup"; 
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASUserPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+dn: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+uniquemember: cn=orcladmin
+objectclass: groupOfUniqueNames
+objectclass: top
+objectclass: orclprivilegegroup
+objectclass: orclGroup
+displayname: Privilege Group
+description: Grant members full DAS privilege 
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASAdminGroup"; 
+      allow (read,search,write,selfwrite,compare) userdn="ldap:///self";
+      allow (read,search,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+
+dn: cn=OracleDASEditGroup, cn=Groups,cn=OracleContext
+objectclass: top
+objectclass: orclPrivilegeGroup
+objectclass: groupOfUniqueNames
+objectclass: orclGroup
+displayname: DAS Edit Group Privilege
+description: Grant members group edit privilege
+uniquemember: cn=orcladmin
+uniqueMember: cn=OracleDASAdminGroup, cn=Groups,cn=OracleContext
+aci: (targetattr="*")(version 3.0; acl "Access OracleDASEditGroup"; 
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASUserPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,selfwrite,compare) groupdn="ldap:///cn=OracleDASGroupPriv, cn=Groups,cn=OracleContext";
+      allow (read,search,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";
+      allow (read,search,compare) userdn="ldap:///anyone";)
+
+dn: cn=Trusted Applications, cn=Groups, cn=OracleContext
+objectclass: groupOfUniqueNames
+aci: (targetattr="*")(version 3.0; acl "Access to Trusted Applications";
+     allow (read,search,write,compare) groupdn="ldap:///cn=iASAdmins, cn=Groups,cn=OracleContext";)
+
+#
+# Create new default domain admin group under Default Domain 
+#
+dn: cn=OracleDomainAdmins,cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext
+cn: OracleDomainAdmins
+uniquemember: cn=orcladmin
+objectclass: top
+objectclass: groupofUniqueNames
+objectclass: orclPrivilegeGroup
+
+#
+# Add the Proxy Permissions container for the default domain
+#
+dn: cn=ProxyPermissions,cn=OracleDefaultDomain,cn=OracleDBSecurity,cn=Products,cn=OracleContext
+cn: ProxyPermissions
+objectclass: orclContainer
+objectclass: top
+
+#
+# Add the subtree for Certificate Revocation Lists
+#
+dn: cn=Trusted Applications Admins,cn=groups,cn=OracleContext
+cn: Trusted Applications Admins
+owner: cn=orcladmin
+uniquemember: cn=orcladmin
+objectclass: groupofuniquenames
+objectclass: top
+objectclass: orclACPGroup
+objectclass: orclGroup
+aci: (targetattr="*")(targetscope="base")(version 3.0; acl "Trusted Applications Admins accessible by OracleUserSecurityAdmins"; allow (search,read,write,compare) groupdn="ldap:///cn=OracleUserSecurityAdmins,cn=groups,cn=OracleContext";)
+
+dn: cn=CRLAdmins,cn=groups,cn=OracleContext
+cn: CRLAdmins
+uniquemember: cn=orcladmin
+uniquemember: cn=pkiadmins,cn=groups,cn=oraclecontext
+owner: cn=Trusted Applications Admins,cn=groups,cn=OracleContext
+objectclass: top
+objectclass: orclACPGroup
+objectclass: orclGroup
+objectclass: groupofuniquenames
+aci: (targetattr="*")(version 3.0; acl "CRLAdmins accessible by Trusted Applications Admins"; allow (search,read,write,compare) groupdn="ldap:///cn=Trusted Applications Admins,cn=groups,cn=OracleContext";)
+
+dn: cn=PKIAdmins,cn=groups,cn=OracleContext
+cn: PKIAdmins
+uniquemember: cn=orcladmin
+owner: cn=Trusted Applications Admins,cn=groups,cn=OracleContext
+objectclass: top
+objectclass: orclACPGroup
+objectclass: orclGroup
+objectclass: groupofuniquenames
+aci: (targetattr="*")(version 3.0; acl "CRLAdmins accessible by Trusted Applications Admins"; allow (search,read,write,compare) groupdn="ldap:///cn=Trusted Applications Admins,cn=groups,cn=OracleContext";)
+
+dn: cn=PKI,cn=Products,cn=OracleContext
+cn: PKI
+objectclass: top
+objectclass: orclContainer
+
+dn: cn=OCA,cn=PKI,cn=Products,cn=OracleContext
+cn: OCA
+objectclass: top
+objectclass: orclContainer
+aci: (targetattr="*")(version 3.0; acl "OCA accessible by Trusted Applications Admins"; allow (all) groupdn="ldap:///cn=Trusted Applications Admins,cn=groups,cn=OracleContext";)
+
+dn: cn=Validation,cn=PKI,cn=Products,cn=OracleContext
+cn: Validation
+objectclass: top
+objectclass: orclContainer
+
+dn: cn=CRLValidation,cn=Validation,cn=PKI,cn=Products,cn=OracleContext
+cn: CRLValidation
+objectclass: top
+objectclass: orclContainer
+aci: (targetattr="*")(version 3.0; acl "CRLValidation accessible by CRLAdmins"; allow (all) groupdn="ldap:///cn=CRLAdmins,cn=groups,cn=OracleContext";)
+
+dn: cn=ValidationMechanism,cn=Validation,cn=PKI,cn=Products,cn=OracleContext
+cn: ValidationMechanism
+orclpkivalmecattr: CRL
+objectclass: top
+objectclass: orclPKIValMecCl
+objectclass: orclContainer
+aci: (targetattr="*")(version 3.0; acl "ValidationMechanism accessible by CRLAdmins"; allow (all) groupdn="ldap:///cn=CRLAdmins,cn=groups,cn=OracleContext";)
+

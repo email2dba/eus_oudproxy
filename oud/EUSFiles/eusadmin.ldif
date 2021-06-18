@@ -1,0 +1,54 @@
+dn: cn=eusadmin,cn=OracleContext
+changetype: add
+objectClass: top
+objectClass: organizationalperson
+objectClass: inetorgperson
+uid: cn=eusadmin,cn=OracleContext
+cn: eusadmin
+sn: EUS
+givenName: Admin
+userPassword: Welcome1
+ds-privilege-name: password-reset
+ds-privilege-name: unindexed-search
+ds-privilege-name: modify-acl
+ds-pwp-password-policy-dn: cn=EUSAdmins,cn=Password Policies,cn=config
+
+dn: ou=Groups,dc=pelican,dc=home
+changetype: modify
+add: aci
+aci: (targetattr="*")(version 3.0; acl "give eusadmin full rights"; allow(all) userdn =  "ldap:///cn=eusadmin,cn=oraclecontext";)
+
+dn: ou=People,dc=pelican,dc=home
+changetype: modify
+add: aci
+aci: (targetattr="*")(version 3.0; acl "give eusadmin full rights"; allow(all) userdn =  "ldap:///cn=eusadmin,cn=oraclecontext";)
+
+dn: cn=PolicyCreators,cn=Policies,cn=LabelSecurity,cn=Products,cn=OracleContext,dc=pelican,dc=home
+changetype: modify
+add: uniquemember
+uniquemember: cn=eusadmin,cn=OracleContext
+
+dn: cn=OracleContextAdmins,cn=groups,cn=OracleContext,dc=pelican,dc=home
+changetype: modify
+add: uniquemember
+uniquemember: cn=eusadmin,cn=OracleContext
+
+dn: cn=OracleDBCreators,cn=OracleContext
+changetype: modify
+add: uniquemember
+uniquemember: cn=eusadmin,cn=OracleContext
+
+dn: cn=OracleNetAdmins,cn=OracleContext
+changetype: modify
+add: uniquemember
+uniquemember: cn=eusadmin,cn=OracleContext
+
+dn: cn=OracleContextAdmins,cn=Groups,cn=OracleContext
+changetype: modify
+add: uniquemember
+uniquemember: cn=eusadmin,cn=OracleContext
+
+dn: cn=OracleUserSecurityAdmins,cn=Groups,cn=OracleContext
+changetype: modify
+add: uniquemember
+uniquemember: cn=eusadmin,cn=OracleContext

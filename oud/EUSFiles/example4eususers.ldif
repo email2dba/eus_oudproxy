@@ -1,0 +1,85 @@
+version: 1
+
+
+# entry-id: 1
+dn: ou=People, dc=pelican,dc=home
+objectClass: top
+objectClass: organizationalunit
+ou: People
+aci: (targetattr ="userpassword || telephonenumber || facsimiletelephonenumber
+ ")(version 3.0;acl "Allow self entry modification";allow (write)(userdn = "l
+ dap:///self");)
+
+# entry-id: 2
+dn: ou=Groups, dc=pelican,dc=home
+objectClass: top
+objectClass: organizationalunit
+ou: Groups
+
+# entry-id: 3
+
+dn: cn=ora_connect, ou=Groups, dc=pelican,dc=home
+ou: Groups
+objectClass: top
+objectClass: groupofuniquenames
+uniqueMember: uid=user.1, ou=People, dc=pelican,dc=home
+uniqueMember: uid=user.2, ou=People, dc=pelican,dc=home
+cn: ora_connect 
+
+
+# entry-id: 4
+
+dn: cn=ora_resource, ou=Groups, dc=pelican,dc=home
+ou: Groups
+objectClass: top
+objectClass: groupofuniquenames
+uniqueMember: uid=user.1, ou=People, dc=pelican,dc=home
+cn: ora_resource
+
+# entry-id: 5
+
+dn: cn=ora_dba, ou=Groups, dc=pelican,dc=home
+ou: Groups
+objectClass: top
+objectClass: groupofuniquenames
+uniqueMember: uid=user.2, ou=People, dc=pelican,dc=home
+cn: ora_dba
+
+
+# entry-id: 6
+dn: uid=user.0, ou=People, dc=pelican,dc=home
+givenName: user.0
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: user.0
+cn: user.0
+sn: user.0
+userPassword: Welcome1
+
+
+
+# entry-id: 7
+dn: uid=user.1, ou=People, dc=pelican,dc=home
+givenName: user.1
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: user.1
+cn: user.1
+sn: user.1
+userPassword: Welcome1
+
+# entry-id: 8
+dn: uid=user.2, ou=People, dc=pelican,dc=home
+givenName: user.2
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: user.2
+cn: user.2
+sn: user.2
+userPassword: Welcome1

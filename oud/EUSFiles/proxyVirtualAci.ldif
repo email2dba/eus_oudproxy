@@ -1,0 +1,9 @@
+# This file contains virtual acis that are added when EUS is configured with
+# ldap proxy.
+dn: dc=example,dc=com
+changetype: modify
+add: aci
+aci: (target="ldap:///dc=example,dc=com")(targetattr="*")(version 3.0; acl "EUS reads users"; allow (read,search,compare) userdn="ldap:///??sub?(&(objectclass=orclservice)(objectclass=orcldbserver))";)
+aci: (target="ldap:///dc=example,dc=com")(targetattr="orclaccountstatusevent")(version 3.0; acl "EUS write orclaccountstatusenabled"; allow (write) userdn="ldap:///??sub?(&(objectclass=orclservice)(objectclass=orcldbserver))";)
+aci: (target="ldap:///dc=example,dc=com")(targetattr="*")(version 3.0; acl "Proxy self entry access"; allow (read,search,compare,write) userdn="ldap:///self";)
+aci: (target="ldap:///dc=example,dc=com")(targetattr="*")(version 3.0; acl "Deny anonymous"; deny (all) userdn="ldap:///anyone";)

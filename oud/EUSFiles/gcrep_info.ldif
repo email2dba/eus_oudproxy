@@ -1,0 +1,19 @@
+dn: cn=gcrep,cn=OracleContext,dc=pelican,dc=home
+changetype: add
+objectclass: top
+objectclass: orclService
+objectclass: orclDBServer
+objectclass: orclDBServer_92
+objectclass: orclApplicationEntity
+orclservicetype: DB
+userpassword: senthilnathan14
+cn: gcrep
+orclsid: gcrep
+orclsystemname: gcrep.pelican.home
+orclnetdescname: 000:cn=DESCRIPTION_0
+orcldbglobalname: gcrep
+orcloraclehome: /apps/oracle/product/12.1.0.2
+orclnetdescstring: (DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=testserver.dev.pelican.home)(PORT=1551)))(CONNECT_DATA=(SERVICE_NAME=testdb.pelican.home)))
+orclversion: 122000
+orclguid: 4EA7591CD133CA91E05018AC88607EA6 
+
